@@ -1,3 +1,4 @@
+<?php
 class Bike {
     protected $gear;
     protected $nombre;
@@ -118,6 +119,8 @@ $urbanBike = new Urban("Urban Bike 1", 7, "U-001", 2);
 $bikeCollection = new BikeCollection();
 $bikeCollection->addBike($deliveryBike);
 $bikeCollection->addBike($urbanBike);
+
+
 
 // Iterar sobre BikeCollection e imprimir la descripción de cada bicicleta
 foreach ($bikeCollection->getAllMembers() as $bike) {
