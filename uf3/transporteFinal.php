@@ -1,5 +1,6 @@
 
 
+
 <?php
 
 class Conductor {
@@ -125,11 +126,12 @@ abstract class AbstractMedioTransporte {
     protected $pasajeros;
     protected $butacas;
 
-    public function __construct(Conductor $conductor) {
+    public function __construct(Conductor $conductor, PasajeroCollection $pasajeros, ButacaCollection $butacas) {
         $this->setConductor($conductor);
-        $this->setPasajeros(new PasajeroCollection());
-        $this->setButacas(new ButacaCollection());
+        $this->setPasajeros($pasajeros);
+        $this->setButacas($butacas);
     }
+
 
     public function setConductor(Conductor $conductor) {
         $this->conductor = $conductor;
@@ -160,8 +162,8 @@ class AutoBus extends AbstractMedioTransporte {
     private $nombreBus;
     private $numeroBus;
 
-    public function __construct(Conductor $conductor, $nombreBus, $numeroBus) {
-        parent::__construct($conductor);
+    public function __construct(Conductor $conductor, PasajeroCollection $pasajeros, ButacaCollection $butacas, $nombreBus, $numeroBus) {
+        parent::__construct($conductor, $pasajeros, $butacas);
         $this->setNombreBus($nombreBus);
         $this->setNumeroBus($numeroBus);
     }
@@ -218,8 +220,8 @@ class Tren extends AbstractMedioTransporte {
     private $nombreTren;
     private $numeroTren;
 
-    public function __construct(Conductor $conductor, $nombreTren, $numeroTren) {
-        parent::__construct($conductor);
+    public function __construct(Conductor $conductor, PasajeroCollection $pasajeros, ButacaCollection $butacas, $nombreTren, $numeroTren) {
+        parent::__construct($conductor, $pasajeros, $butacas);
         $this->setNombreTren($nombreTren);
         $this->setNumeroTren($numeroTren);
     }
@@ -272,53 +274,45 @@ class Tren extends AbstractMedioTransporte {
 
 
 $conductorBus = new Conductor("Juan Pérez", 1);
-
-
-$autobus = new AutoBus($conductorBus, "Bus 1", "001");
-
-
-$pasajeroBus1 = new Pasajero("Pasajero Bus 1", 101);
-$autobus->getPasajeros()->addPasajero($pasajeroBus1);
-$pasajeroBus2 = new Pasajero("Pasajero Bus 2", 101);
-$autobus->getPasajeros()->addPasajero($pasajeroBus2);
-
-$butacaBus1 = new Butaca("Butaca 1", 1);
-$autobus->getButacas()->addButaca($butacaBus1);
-
-
 $conductorTren = new Conductor("María López", 2);
 
+// Ahora, creamos las colecciones de pasajeros y butacas para cada medio de transporte
+$pasajerosBus = new PasajeroCollection();
+$butacasBus = new ButacaCollection();
 
-$tren = new Tren($conductorTren, "Tren 1", "002");
+$pasajerosTren = new PasajeroCollection();
+$butacasTren = new ButacaCollection();
 
+// Crear pasajeros y butacas y añadirlos a sus respectivas colecciones para el autobús
+$pasajerosBus->addPasajero(new Pasajero("Alice Smith", 101));
+$pasajerosBus->addPasajero(new Pasajero("Bob Jones", 102));
+$butacasBus->addButaca(new Butaca("Asiento 1", 1));
+$butacasBus->addButaca(new Butaca("Asiento 2", 2));
 
-$pasajeroTren1 = new Pasajero("Pasajero Tren 1", 201);
-$tren->getPasajeros()->addPasajero($pasajeroTren1);
+// Crear pasajeros y butacas y añadirlos a sus respectivas colecciones para el tren
+$pasajerosTren->addPasajero(new Pasajero("Carlos García", 201));
+$pasajerosTren->addPasajero(new Pasajero("Diana Prince", 202));
+$butacasTren->addButaca(new Butaca("Cabina 1", 1));
+$butacasTren->addButaca(new Butaca("Cabina 2", 2));
 
+// Crear el autobús y el tren con sus atributos y colecciones
+$autobus = new AutoBus($conductorBus, $pasajerosBus, $butacasBus, "Bus Express", "B100");
+$tren = new Tren($conductorTren, $pasajerosTren, $butacasTren, "Tren Rápido", "T200");
 
-$butacaTren1 = new Butaca("Butaca Premium", 1);
-$tren->getButacas()->addButaca($butacaTren1);
-
-
+// Imprimir información del autobús y tren
 echo "Autobús:\n";
-var_dump($autobus);
-
-
-echo "\n\nTren:\n";
-var_dump($tren);
-
 $autobus->getDescription();
-echo "Total de butacas en el autobús: " . $autobus->sumarButacas() . "<br>";
-echo "Todos los pasajeros del autobús: <br>";
+echo "Total de butacas en el autobús: " . $autobus->sumarButacas() . "\n";
+echo "Todos los pasajeros del autobús: \n";
 foreach ($autobus->obtenerTodosPasajeros() as $pasajero) {
-    echo $pasajero . "<br>";
+    echo $pasajero . "\n";
 }
 
-echo "<br>"; // Separador para mejor lectura
+echo "\n\nTren:\n";
 $tren->getDescription();
-echo "Total de butacas en el tren: " . $tren->sumarButacas() . "<br>";
-echo "Todos los pasajeros del tren: <br>";
+echo "Total de butacas en el tren: " . $tren->sumarButacas() . "\n";
+echo "Todos los pasajeros del tren: \n";
 foreach ($tren->obtenerTodosPasajeros() as $pasajero) {
-    echo $pasajero . "<br>";
+    echo $pasajero . "\n";
 }
 ?>
