@@ -126,3 +126,4 @@ $bikeCollection->addBike($urbanBike);
 foreach ($bikeCollection->getAllMembers() as $bike) {
     echo $bike . "\n";
 }
+?>
